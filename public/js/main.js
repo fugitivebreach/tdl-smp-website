@@ -211,7 +211,69 @@ function closeModal(modal) {
     modal.style.display = 'none';
 }
 
-// Utility functions
+// Show modal with title, message and type
+function showModal(title, message, type = 'info') {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('responseModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'responseModal';
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    
+    const iconClass = type === 'success' ? 'fas fa-check-circle' : 
+                     type === 'error' ? 'fas fa-exclamation-triangle' : 
+                     'fas fa-info-circle';
+    
+    const iconColor = type === 'success' ? '#10b981' : 
+                     type === 'error' ? '#ef4444' : 
+                     '#3b82f6';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">
+                    <i class="${iconClass}" style="color: ${iconColor}; margin-right: 0.5rem;"></i>
+                    ${title}
+                </h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">${message}</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modalClose" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    const closeBtn = modal.querySelector('.close');
+    const modalCloseBtn = modal.querySelector('#modalClose');
+    
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    modalCloseBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    return modal;
+}
+
 function initUtilities() {
     // Smooth scrolling for anchor links
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
@@ -250,6 +312,48 @@ function initUtilities() {
             const scrolled = window.pageYOffset;
             const rate = scrolled * -0.5;
             hero.style.transform = `translateY(${rate}px)`;
+        });
+    }
+    
+    const reportForm = document.getElementById('reportForm');
+    if (reportForm) {
+        reportForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('.btn-primary');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Report...';
+            
+            try {
+                // Get form data (keep as FormData for file upload)
+                const formData = new FormData(this);
+                
+                const response = await fetch('/submit-report', {
+                    method: 'POST',
+                    body: formData // Don't set Content-Type header, let browser set it for multipart/form-data
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Show success modal
+                    showModal('Appeal Submitted Successfully! ⚖️', result.message, 'success');
+                    this.reset();
+                } else {
+                    // Show error modal
+                    showModal('Submission Failed', result.error || 'An error occurred while submitting your appeal.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal('Network Error', 'Unable to submit appeal. Please check your connection and try again.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
         });
     }
 }
