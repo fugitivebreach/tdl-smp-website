@@ -315,6 +315,50 @@ function initUtilities() {
         });
     }
     
+    // Appeal form submission handler
+    const appealForm = document.getElementById('appealForm');
+    if (appealForm) {
+        appealForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('.btn-primary');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Appeal...';
+            
+            try {
+                // Get form data
+                const formData = new FormData(this);
+                
+                const response = await fetch('/submit-appeal', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Show success modal
+                    showModal('Appeal Submitted Successfully! ⚖️', result.message, 'success');
+                    this.reset();
+                } else {
+                    // Show error modal
+                    showModal('Submission Failed', result.error || 'An error occurred while submitting your appeal.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal('Network Error', 'Unable to submit appeal. Please check your connection and try again.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    // Report form submission handler
     const reportForm = document.getElementById('reportForm');
     if (reportForm) {
         reportForm.addEventListener('submit', async function(e) {
@@ -340,15 +384,15 @@ function initUtilities() {
                 
                 if (response.ok) {
                     // Show success modal
-                    showModal('Appeal Submitted Successfully! ⚖️', result.message, 'success');
+                    showModal('Report Submitted Successfully! 🎉', result.message, 'success');
                     this.reset();
                 } else {
                     // Show error modal
-                    showModal('Submission Failed', result.error || 'An error occurred while submitting your appeal.', 'error');
+                    showModal('Submission Failed', result.error || 'An error occurred while submitting your report.', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showModal('Network Error', 'Unable to submit appeal. Please check your connection and try again.', 'error');
+                showModal('Network Error', 'Unable to submit report. Please check your connection and try again.', 'error');
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
