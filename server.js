@@ -442,7 +442,8 @@ app.get('/admin', (req, res) => {
   }
   res.render('admin-login', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user || null
   });
 });
 
@@ -458,7 +459,8 @@ app.post('/admin/login', async (req, res) => {
       res.render('admin-login', { 
         error: 'Invalid credentials',
         siteName: process.env.SITE_NAME || 'TDL SMP',
-        isDev: isDev 
+        isDev: isDev,
+        user: req.user || null
       });
     }
   } catch (error) {
@@ -495,11 +497,34 @@ app.get('/admin/dashboard', async (req, res) => {
         }
       });
     });
+
+    // Get reports from SQLite database
+    const reports = await new Promise((resolve, reject) => {
+      db.all('SELECT * FROM reports ORDER BY submittedAt DESC', (err, rows) => {
+        if (err) {
+          console.error('Reports database error:', err);
+          resolve([]); // If reports table doesn't exist, return empty array
+        } else {
+          console.log(`📊 Found ${rows.length} reports in database`);
+          // Convert SQLite rows to match the expected format
+          const formattedReports = rows.map(row => ({
+            ...row,
+            _id: row.id,
+            truthfulReport: row.truthfulReport === 1,
+            submittedAt: row.submittedAt,
+            reviewedAt: row.reviewedAt
+          }));
+          resolve(formattedReports);
+        }
+      });
+    });
     
     res.render('admin-dashboard', { 
       appeals,
+      reports,
       siteName: process.env.SITE_NAME || 'TDL SMP',
-      isDev: isDev 
+      isDev: isDev,
+      user: req.user || null
     });
   } catch (error) {
     console.error('Dashboard error:', error);
@@ -562,6 +587,60 @@ app.post('/admin/review/:id', async (req, res) => {
   }
 });
 
+// Admin report review
+app.post('/admin/review-report/:id', async (req, res) => {
+  if (!req.session.isAdmin) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const { status } = req.body;
+    const reportId = req.params.id;
+    
+    // Update report status in SQLite
+    await new Promise((resolve, reject) => {
+      const stmt = db.prepare(`UPDATE reports SET 
+        status = ?, 
+        reviewedAt = datetime('now'), 
+        reviewedBy = ? 
+        WHERE id = ?`);
+      
+      stmt.run(status, 'TDLAdmin', reportId, function(err) {
+        if (err) {
+          console.error('Report update error:', err);
+          reject(err);
+        } else {
+          console.log(`✅ Report ${reportId} updated to status: ${status}`);
+          resolve();
+        }
+      });
+    });
+    
+    // Get the updated report
+    const report = await new Promise((resolve, reject) => {
+      db.get('SELECT * FROM reports WHERE id = ?', [reportId], (err, row) => {
+        if (err) {
+          console.error('Report fetch error:', err);
+          reject(err);
+        } else {
+          resolve({
+            ...row,
+            _id: row.id,
+            truthfulReport: row.truthfulReport === 1,
+            submittedAt: row.submittedAt,
+            reviewedAt: row.reviewedAt
+          });
+        }
+      });
+    });
+
+    res.json({ success: true, report });
+  } catch (error) {
+    console.error('Report review error:', error);
+    res.status(500).json({ error: 'Failed to update report' });
+  }
+});
+
 // Admin logout
 app.post('/admin/logout', (req, res) => {
   req.session.destroy();
@@ -572,7 +651,8 @@ app.post('/admin/logout', (req, res) => {
 app.use((req, res) => {
   res.status(404).render('404', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user || null
   });
 });
 
