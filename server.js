@@ -10,6 +10,8 @@ const axios = require('axios');
 const sqlite3 = require('sqlite3').verbose();
 const multer = require('multer');
 const fs = require('fs');
+const passport = require('passport');
+const DiscordStrategy = require('passport-discord').Strategy;
 require('dotenv').config();
 
 const app = express();
@@ -26,21 +28,28 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Body parsing middleware
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallback_secret_key',
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  cookie: { 
+    secure: false, // Set to true in production with HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Static files
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set view engine
 app.set('view engine', 'ejs');
@@ -89,6 +98,33 @@ db.exec(`
 
 console.log(`📊 SQLite database connected: ${dbPath}`);
 
+// Discord OAuth2 Configuration
+passport.use(new DiscordStrategy({
+    clientID: process.env.DISCORD_CLIENT_ID,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    callbackURL: process.env.DISCORD_CALLBACK_URL || (isDev ? 'http://localhost:3001/auth/discord/callback' : '/auth/discord/callback'),
+    scope: ['identify', 'email']
+}, (accessToken, refreshToken, profile, done) => {
+    // Store user info in session
+    const user = {
+        id: profile.id,
+        username: profile.username,
+        discriminator: profile.discriminator,
+        avatar: profile.avatar,
+        email: profile.email,
+        tag: `${profile.username}#${profile.discriminator}`
+    };
+    return done(null, user);
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -121,50 +157,98 @@ const upload = multer({
   }
 });
 
+// Authentication middleware
+function requireAuth(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  // Store the original URL to redirect back after login
+  req.session.returnTo = req.originalUrl;
+  res.redirect('/login');
+}
+
+// Discord OAuth2 Routes
+app.get('/auth/discord', passport.authenticate('discord'));
+
+app.get('/auth/discord/callback', 
+  passport.authenticate('discord', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, redirect to original page or home
+    const returnTo = req.session.returnTo || '/';
+    delete req.session.returnTo;
+    res.redirect(returnTo);
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Logout error:', err);
+    }
+    res.redirect('/');
+  });
+});
+
+app.get('/login', (req, res) => {
+  res.render('login', {
+    siteName: process.env.SITE_NAME || 'TDL SMP',
+    isDev: isDev,
+    returnTo: req.query.returnTo || '/'
+  });
+});
+
 // Routes
 app.get('/', (req, res) => {
   res.render('index', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user || null
   });
 });
 
-app.get('/appeal', (req, res) => {
+app.get('/appeal', requireAuth, (req, res) => {
   res.render('appeal', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user
   });
 });
 
-app.get('/report', (req, res) => {
+app.get('/report', requireAuth, (req, res) => {
   res.render('report', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user
   });
 });
 
 app.get('/smp-info', (req, res) => {
   res.render('smp-info', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user || null
   });
 });
 
 app.get('/community', (req, res) => {
   res.render('community', { 
     siteName: process.env.SITE_NAME || 'TDL SMP',
-    isDev: isDev 
+    isDev: isDev,
+    user: req.user || null
   });
 });
 
 // Ban Appeal submission
-app.post('/submit-appeal', async (req, res) => {
+app.post('/submit-appeal', requireAuth, async (req, res) => {
   try {
     console.log('=== FORM DATA RECEIVED ===');
     console.log('Full req.body:', req.body);
     console.log('========================');
     
-    const { minecraftUsername, discordUsername, banType, banReason, banDate, appealReason, whatHappened, whyUnban, rulesUnderstood, additionalInfo } = req.body;
+    const { minecraftUsername, banType, banReason, banDate, appealReason, whatHappened, whyUnban, rulesUnderstood, additionalInfo } = req.body;
+    
+    // Use authenticated Discord user info
+    const discordUsername = req.user.tag;
 
     console.log('Extracted fields:');
     console.log('minecraftUsername:', minecraftUsername);
@@ -256,7 +340,7 @@ app.post('/submit-appeal', async (req, res) => {
 });
 
 // Player report submission
-app.post('/submit-report', upload.single('videoProof'), async (req, res) => {
+app.post('/submit-report', requireAuth, upload.single('videoProof'), async (req, res) => {
   try {
     const { playerIdentifier, reportReason, additionalInfo, truthfulReport } = req.body;
 

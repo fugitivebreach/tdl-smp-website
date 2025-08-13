@@ -39,19 +39,43 @@ This website is optimized for Railway deployment:
 
 ## 🔧 Environment Variables
 
-Required for production:
+Create a `.env` file in the root directory with the following variables:
 
 ```env
-NODE_ENV=production
-PORT=3000
+NODE_ENV=development
+PORT=3001
 SITE_NAME=TDL SMP
-SITE_DESCRIPTION=The ultimate Minecraft SMP experience
+SITE_DESCRIPTION=Official TDL SMP Minecraft Server Website
 ADMIN_USERNAME=TDLAdmin
-ADMIN_PASSWORD=your_secure_password
-SESSION_SECRET=your_session_secret
-DISCORD_WEBHOOK_URL=your_appeal_webhook
-REPORTS_WEBHOOK_URL=your_reports_webhook
+ADMIN_PASSWORD=your_strong_password_here
+SESSION_SECRET=your_session_secret_here
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url_here
+REPORTS_WEBHOOK_URL=https://discord.com/api/webhooks/your_reports_webhook_url_here
+
+# Discord OAuth2 (Required for user authentication)
+DISCORD_CLIENT_ID=your_discord_application_client_id
+DISCORD_CLIENT_SECRET=your_discord_application_client_secret
+DISCORD_CALLBACK_URL=http://localhost:3001/auth/discord/callback
 ```
+
+### Discord OAuth2 Setup
+
+1. **Create Discord Application:**
+   - Go to [Discord Developer Portal](https://discord.com/developers/applications)
+   - Click "New Application" and name it (e.g., "TDL SMP Website")
+   - Copy the **Application ID** → use as `DISCORD_CLIENT_ID`
+
+2. **Generate Client Secret:**
+   - In your application, go to "OAuth2" → "General"
+   - Click "Reset Secret" and copy it → use as `DISCORD_CLIENT_SECRET`
+
+3. **Set Redirect URLs:**
+   - In "OAuth2" → "General" → "Redirects"
+   - Add: `http://localhost:3001/auth/discord/callback` (development)
+   - Add: `https://your-domain.railway.app/auth/discord/callback` (production)
+
+4. **OAuth2 Scopes:**
+   - The application automatically requests: `identify` and `email` scopes
 
 ## 📱 Pages
 

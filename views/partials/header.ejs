@@ -21,23 +21,51 @@
                     <h2><%= siteName %><% if (isDev) { %> <span class="dev-badge">DEV</span><% } %></h2>
                 </a>
             </div>
-            <div class="nav-tabs">
-                <a href="/" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'home' ? 'active' : '' %>">
-                    <i class="fas fa-home"></i> HOMEPAGE
+            <nav class="nav-tabs">
+                <a href="/" class="nav-tab <%= activeTab === 'home' ? 'active' : '' %>">
+                    <i class="fas fa-home"></i>
+                    HOMEPAGE
                 </a>
-                <a href="/appeal" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'appeal' ? 'active' : '' %>">
-                    <i class="fas fa-file-alt"></i> APPEAL
+                <a href="/appeal" class="nav-tab <%= activeTab === 'appeal' ? 'active' : '' %>">
+                    <i class="fas fa-gavel"></i>
+                    APPEAL
                 </a>
-                <a href="/report" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'report' ? 'active' : '' %>">
-                    <i class="fas fa-flag"></i> REPORT
+                <a href="/report" class="nav-tab <%= activeTab === 'report' ? 'active' : '' %>">
+                    <i class="fas fa-flag"></i>
+                    REPORT
                 </a>
-                <a href="/smp-info" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'smp-info' ? 'active' : '' %>">
-                    <i class="fas fa-info-circle"></i> SMP INFO
+                <a href="/smp-info" class="nav-tab <%= activeTab === 'smp-info' ? 'active' : '' %>">
+                    <i class="fas fa-info-circle"></i>
+                    SMP INFO
                 </a>
-                <a href="/community" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'community' ? 'active' : '' %>">
-                    <i class="fas fa-users"></i> COMMUNITY
+                <a href="/community" class="nav-tab <%= activeTab === 'community' ? 'active' : '' %>">
+                    <i class="fab fa-discord"></i>
+                    COMMUNITY
                 </a>
-            </div>
+                
+                <!-- User Authentication Status -->
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <div class="user-info">
+                        <% if (user.avatar) { %>
+                            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="<%= user.username %>" class="user-avatar">
+                        <% } else { %>
+                            <div class="user-avatar" style="background: var(--accent-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                <%= user.username.charAt(0).toUpperCase() %>
+                            </div>
+                        <% } %>
+                        <span class="user-name"><%= user.username %></span>
+                        <a href="/logout" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                <% } else { %>
+                    <a href="/login" class="nav-tab <%= activeTab === 'login' ? 'active' : '' %>">
+                        <i class="fab fa-discord"></i>
+                        LOGIN
+                    </a>
+                <% } %>
+            </nav>
         </div>
     </nav>
 

@@ -18,12 +18,20 @@
                            placeholder="Enter your banned Minecraft username">
                 </div>
 
+                <!-- Discord username automatically filled from authenticated user -->
                 <div class="form-group">
-                    <label for="discordUsername">
-                        <i class="fab fa-discord"></i> Discord Username *
+                    <label>
+                        <i class="fab fa-discord"></i>
+                        Discord Username
                     </label>
-                    <input type="text" id="discordUsername" name="discordUsername" required 
-                           placeholder="Enter your Discord username (e.g., username#1234)">
+                    <div class="readonly-field">
+                        <% if (user && user.tag) { %>
+                            <%= user.tag %>
+                        <% } else { %>
+                            Not logged in
+                        <% } %>
+                    </div>
+                    <div class="field-hint">Automatically filled from your Discord login</div>
                 </div>
 
                 <div class="form-group">

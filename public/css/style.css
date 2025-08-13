@@ -1343,6 +1343,192 @@ body {
     }
 }
 
+/* Discord Login Page Styling */
+.login-content {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.login-info {
+    margin-bottom: 3rem;
+}
+
+.login-info h3 {
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.login-benefits {
+    list-style: none;
+    padding: 0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.login-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(40, 40, 40, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #e5e7eb;
+}
+
+.login-benefits li i {
+    color: #10b981;
+    font-size: 1.1rem;
+    min-width: 20px;
+}
+
+.login-actions {
+    margin: 3rem 0;
+}
+
+.btn-discord {
+    background: linear-gradient(135deg, #5865f2, #7289da);
+    color: white;
+    padding: 1.25rem 3rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(88, 101, 242, 0.3);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-discord:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(88, 101, 242, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.btn-discord i {
+    font-size: 1.5rem;
+}
+
+.login-note {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    color: #93c5fd;
+}
+
+.login-note i {
+    color: #3b82f6;
+    margin-right: 0.5rem;
+}
+
+/* User Info in Navigation */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 2rem;
+    padding: 0.5rem 1rem;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+}
+
+.user-name {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.logout-btn {
+    background: rgba(220, 38, 38, 0.2);
+    color: var(--accent-color);
+    border: 1px solid rgba(220, 38, 38, 0.4);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(220, 38, 38, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+/* Login Required Message */
+.login-required {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    border-radius: 16px;
+    margin: 2rem 0;
+}
+
+.login-required h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.login-required p {
+    color: #e5e7eb;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Readonly Field Styling */
+.readonly-field {
+    background: rgba(40, 40, 40, 0.8);
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: #10b981;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 56px;
+    position: relative;
+}
+
+.readonly-field::before {
+    content: "✓";
+    color: #10b981;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.readonly-field:hover {
+    border-color: rgba(220, 38, 38, 0.5);
+    background: rgba(40, 40, 40, 0.9);
+}
+
 /* Utility Functions */
 .copy-btn {
     background: var(--dark-crimson);

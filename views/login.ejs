@@ -1,0 +1,64 @@
+<%- include('partials/header', { title: 'Login Required', activeTab: 'login' }) %>
+
+<!-- Login Section -->
+<section class="appeal-section">
+    <div class="container">
+        <div class="appeal-header">
+            <div class="header-icon-wrapper">
+                <div class="header-icon">
+                    <i class="fab fa-discord"></i>
+                </div>
+            </div>
+            <h1 class="page-title">🔐 Discord Login Required</h1>
+            <p class="page-subtitle">You must login with Discord to submit appeals or reports</p>
+            <div class="header-decoration"></div>
+        </div>
+
+        <div class="appeal-form-container">
+            <div class="login-content">
+                <div class="login-info">
+                    <h3><i class="fas fa-shield-alt"></i> Why Discord Login?</h3>
+                    <ul class="login-benefits">
+                        <li><i class="fas fa-check"></i> <strong>Prevents Spam:</strong> Only verified Discord users can submit</li>
+                        <li><i class="fas fa-check"></i> <strong>Community Verification:</strong> Ensures you're part of our Discord server</li>
+                        <li><i class="fas fa-check"></i> <strong>Automatic Info:</strong> Your Discord username is filled automatically</li>
+                        <li><i class="fas fa-check"></i> <strong>Secure & Safe:</strong> We only access your basic Discord profile</li>
+                    </ul>
+                </div>
+
+                <div class="login-actions">
+                    <a href="/auth/discord" class="btn btn-discord">
+                        <i class="fab fa-discord"></i>
+                        Login with Discord
+                    </a>
+                    
+                    <div class="login-note">
+                        <p><i class="fas fa-info-circle"></i> You'll be redirected to Discord to authorize access, then brought back here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Tips -->
+        <div class="appeal-tips">
+            <h3><i class="fas fa-lightbulb"></i> What We Access</h3>
+            <ul>
+                <li>Your Discord username and tag (e.g., Username#1234)</li>
+                <li>Your Discord profile picture</li>
+                <li>Your email address (for notifications)</li>
+                <li><strong>We DO NOT access:</strong> Your messages, servers, or friends list</li>
+            </ul>
+        </div>
+
+        <!-- Community Section -->
+        <div class="appeal-tips">
+            <h3><i class="fab fa-discord"></i> Join Our Discord</h3>
+            <p>Not part of our Discord community yet? Join us first!</p>
+            <a href="https://discord.gg/zvY6235WC9" target="_blank" class="btn btn-secondary">
+                <i class="fab fa-discord"></i> Join TDL SMP Discord
+            </a>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>
