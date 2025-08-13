@@ -1,0 +1,136 @@
+<%- include('partials/header', { title: 'Appeal', activeTab: 'appeal' }) %>
+
+<!-- Appeal Form Section -->
+<section class="appeal-section">
+    <div class="container">
+        <div class="appeal-header">
+            <h1 class="page-title">Ban Appeal</h1>
+            <p class="page-subtitle">Submit an appeal to request removal of your ban from TDL SMP</p>
+        </div>
+
+        <div class="appeal-form-container">
+            <form id="appealForm" class="appeal-form" method="POST" action="/submit-appeal">
+                <div class="form-group">
+                    <label for="minecraftUsername">
+                        <i class="fas fa-user"></i> Minecraft Username *
+                    </label>
+                    <input type="text" id="minecraftUsername" name="minecraftUsername" required 
+                           placeholder="Enter your banned Minecraft username">
+                </div>
+
+                <div class="form-group">
+                    <label for="discordUsername">
+                        <i class="fab fa-discord"></i> Discord Username *
+                    </label>
+                    <input type="text" id="discordUsername" name="discordUsername" required 
+                           placeholder="Enter your Discord username (e.g., username#1234)">
+                </div>
+
+                <div class="form-group">
+                    <label for="banType">
+                        <i class="fas fa-ban"></i> Ban Type *
+                    </label>
+                    <select id="banType" name="banType" required>
+                        <option value="">Select your ban type</option>
+                        <option value="permanent">Permanent Ban</option>
+                        <option value="temporary">Temporary Ban</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="banDate">
+                        <i class="fas fa-calendar"></i> When were you banned? *
+                    </label>
+                    <input type="date" id="banDate" name="banDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="banReason">
+                        <i class="fas fa-exclamation-triangle"></i> What was the reason for your ban? *
+                    </label>
+                    <textarea id="banReason" name="banReason" required rows="3"
+                              placeholder="Enter the reason given for your ban (as stated by staff)..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="appealReason">
+                        <i class="fas fa-question-circle"></i> Why are you appealing this ban? *
+                    </label>
+                    <textarea id="appealReason" name="appealReason" required rows="4"
+                              placeholder="Explain why you believe this ban should be removed..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatHappened">
+                        <i class="fas fa-book"></i> What happened from your perspective? *
+                    </label>
+                    <textarea id="whatHappened" name="whatHappened" required rows="4"
+                              placeholder="Describe the events that led to your ban from your point of view..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="whyUnban">
+                        <i class="fas fa-undo"></i> Why should you be unbanned? *
+                    </label>
+                    <textarea id="whyUnban" name="whyUnban" required rows="4"
+                              placeholder="Explain why you should be given another chance..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">
+                        <i class="fas fa-comment"></i> Additional Information
+                    </label>
+                    <textarea id="additionalInfo" name="additionalInfo" rows="3"
+                              placeholder="Any additional information, evidence, or context? (Optional)"></textarea>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rulesUnderstood" name="rulesUnderstood" required>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">
+                            I understand the server rules and will follow them if unbanned *
+                        </span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-gavel"></i> Submit Ban Appeal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Ban Appeal Tips -->
+        <div class="appeal-tips">
+            <h3><i class="fas fa-lightbulb"></i> Ban Appeal Tips</h3>
+            <ul>
+                <li>Be completely honest about what happened - lying will hurt your appeal</li>
+                <li>Take responsibility for your actions if you were in the wrong</li>
+                <li>Explain what you've learned and how you'll avoid similar issues</li>
+                <li>Provide evidence if you believe the ban was incorrect</li>
+                <li>Appeals are typically reviewed within 24-48 hours</li>
+                <li>You'll receive a response via Discord once reviewed</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Success/Error Modal -->
+<div id="responseModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Application Status</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p id="modalMessage"></p>
+        </div>
+        <div class="modal-footer">
+            <button id="modalClose" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

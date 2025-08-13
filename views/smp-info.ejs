@@ -1,0 +1,215 @@
+<%- include('partials/header', { title: 'SMP Info', activeTab: 'smp-info' }) %>
+
+<!-- SMP Info Section -->
+<section class="smp-info-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Server Information</h1>
+            <p class="page-subtitle">Everything you need to know about TDL SMP</p>
+        </div>
+
+        <!-- Server Details -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3>Server Details</h3>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="label">Server IP:</span>
+                        <span class="value">play.tdlsmp.com</span>
+                        <button class="copy-btn" onclick="copyToClipboard('play.tdlsmp.com')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Version:</span>
+                        <span class="value">1.20.1</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Game Mode:</span>
+                        <span class="value">Survival</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Difficulty:</span>
+                        <span class="value">Hard</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Community Stats</h3>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="label">Total Members:</span>
+                        <span class="value">500+</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Active Players:</span>
+                        <span class="value">50-100 daily</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Server Capacity:</span>
+                        <span class="value">200 players</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">World Size:</span>
+                        <span class="value">50,000 x 50,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Server Schedule</h3>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="label">Uptime:</span>
+                        <span class="value">24/7</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Restarts:</span>
+                        <span class="value">Daily at 3 AM EST</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Backups:</span>
+                        <span class="value">Every 6 hours</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Events:</span>
+                        <span class="value">Weekly competitions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 class="section-title">Server Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Land Claims</h4>
+                    <p>Protect your builds with our advanced claiming system</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-store"></i>
+                    <h4>Player Shops</h4>
+                    <p>Create and manage your own shops to trade with others</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-home"></i>
+                    <h4>Home & Warps</h4>
+                    <p>Set multiple homes and use public warp points</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-coins"></i>
+                    <h4>Economy System</h4>
+                    <p>Balanced economy with jobs and rewards</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-trophy"></i>
+                    <h4>Achievements</h4>
+                    <p>Custom achievements and rewards system</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users-cog"></i>
+                    <h4>Staff Support</h4>
+                    <p>Active and helpful staff team available 24/7</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rules Section -->
+        <div class="rules-section">
+            <h2 class="section-title">Server Rules</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-number">1</div>
+                    <div class="rule-content">
+                        <h4>No Griefing</h4>
+                        <p>Respect other players' builds and property</p>
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">2</div>
+                    <div class="rule-content">
+                        <h4>Be Respectful</h4>
+                        <p>Treat all players with kindness and respect</p>
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">3</div>
+                    <div class="rule-content">
+                        <h4>No Cheating</h4>
+                        <p>No hacks, exploits, or unfair advantages</p>
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">4</div>
+                    <div class="rule-content">
+                        <h4>English Only</h4>
+                        <p>Keep chat in English for everyone to understand</p>
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">5</div>
+                    <div class="rule-content">
+                        <h4>No Spam</h4>
+                        <p>Avoid excessive messaging or advertising</p>
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">6</div>
+                    <div class="rule-content">
+                        <h4>Follow Staff</h4>
+                        <p>Listen to staff members and follow their instructions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="getting-started">
+            <h2 class="section-title">Getting Started</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Submit Application</h4>
+                        <p>Fill out our application form to join the server</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Wait for Approval</h4>
+                        <p>Our staff will review your application within 24-48 hours</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Join Discord</h4>
+                        <p>Connect with the community on our Discord server</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Start Playing</h4>
+                        <p>Log in and begin your TDL SMP adventure!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

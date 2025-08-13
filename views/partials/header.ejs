@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %><%= siteName %></title>
+    <meta name="description" content="<%= siteName %> - The ultimate Minecraft SMP experience">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">
+                    <h2><%= siteName %><% if (isDev) { %> <span class="dev-badge">DEV</span><% } %></h2>
+                </a>
+            </div>
+            <div class="nav-tabs">
+                <a href="/" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'home' ? 'active' : '' %>">
+                    <i class="fas fa-home"></i> HOMEPAGE
+                </a>
+                <a href="/appeal" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'appeal' ? 'active' : '' %>">
+                    <i class="fas fa-file-alt"></i> APPEAL
+                </a>
+                <a href="/report" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'report' ? 'active' : '' %>">
+                    <i class="fas fa-flag"></i> REPORT
+                </a>
+                <a href="/smp-info" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'smp-info' ? 'active' : '' %>">
+                    <i class="fas fa-info-circle"></i> SMP INFO
+                </a>
+                <a href="/community" class="nav-tab <%= typeof activeTab !== 'undefined' && activeTab === 'community' ? 'active' : '' %>">
+                    <i class="fas fa-users"></i> COMMUNITY
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">

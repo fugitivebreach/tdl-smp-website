@@ -1,0 +1,27 @@
+<%- include('partials/header', { title: '404 - Page Not Found', siteName: siteName, isDev: isDev }) %>
+
+<!-- 404 Section -->
+<section class="error-section">
+    <div class="container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="error-title">404</h1>
+            <h2 class="error-subtitle">Page Not Found</h2>
+            <p class="error-message">
+                The page you're looking for doesn't exist or has been moved.
+            </p>
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Go Home
+                </a>
+                <a href="/appeal" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i> Submit Appeal
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

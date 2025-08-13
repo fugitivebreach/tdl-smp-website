@@ -1,0 +1,274 @@
+<%- include('partials/header', { title: 'Admin Dashboard', siteName: siteName, isDev: isDev }) %>
+
+<!-- Admin Dashboard Section -->
+<section class="admin-dashboard-section">
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                </h1>
+                <p class="page-subtitle">Manage TDL SMP applications and server settings</p>
+            </div>
+            <div class="header-actions">
+                <form method="POST" action="/admin/logout" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number"><%= appeals.filter(a => a.status === 'pending').length %></div>
+                    <div class="stat-label">Pending Appeals</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number"><%= appeals.filter(a => a.status === 'approved').length %></div>
+                    <div class="stat-label">Approved</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon denied">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number"><%= appeals.filter(a => a.status === 'denied').length %></div>
+                    <div class="stat-label">Denied</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number"><%= appeals.length %></div>
+                    <div class="stat-label">Total Appeals</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appeals Table -->
+        <div class="appeals-section">
+            <div class="section-header">
+                <h2>Recent Appeals</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="approved">Approved</button>
+                    <button class="filter-btn" data-filter="denied">Denied</button>
+                </div>
+            </div>
+
+            <div class="appeals-table-container">
+                <table class="appeals-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Minecraft Username</th>
+                            <th>Discord Username</th>
+                            <th>Ban Type</th>
+                            <th>Ban Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% appeals.forEach(appeal => { %>
+                            <tr class="appeal-row" data-status="<%= appeal.status %>">
+                                <td class="date-cell">
+                                    <%= new Date(appeal.submittedAt).toLocaleDateString() %>
+                                </td>
+                                <td class="username-cell">
+                                    <strong><%= appeal.minecraftUsername %></strong>
+                                </td>
+                                <td class="discord-cell">
+                                    <%= appeal.discordUsername %>
+                                </td>
+                                <td class="ban-type-cell">
+                                    <span class="ban-type-badge <%= appeal.banType %>">
+                                        <%= appeal.banType === 'permanent' ? 'Permanent' : 'Temporary' %>
+                                    </span>
+                                </td>
+                                <td class="ban-reason-cell">
+                                    <%= appeal.banReason ? appeal.banReason.substring(0, 50) + (appeal.banReason.length > 50 ? '...' : '') : 'N/A' %>
+                                </td>
+                                <td class="status-cell">
+                                    <span class="status-badge status-<%= appeal.status %>">
+                                        <% if (appeal.status === 'pending') { %>
+                                            <i class="fas fa-clock"></i> Pending
+                                        <% } else if (appeal.status === 'approved') { %>
+                                            <i class="fas fa-check"></i> Approved
+                                        <% } else if (appeal.status === 'denied') { %>
+                                            <i class="fas fa-times"></i> Denied
+                                        <% } %>
+                                    </span>
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn btn-small btn-info" onclick="viewAppeal('<%= appeal._id %>')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <% if (appeal.status === 'pending') { %>
+                                        <button class="btn btn-small btn-success" onclick="reviewAppeal('<%= appeal._id %>', 'approved')">
+                                            <i class="fas fa-check"></i> Approve
+                                        </button>
+                                        <button class="btn btn-small btn-danger" onclick="reviewAppeal('<%= appeal._id %>', 'denied')">
+                                            <i class="fas fa-times"></i> Deny
+                                        </button>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appeal Details Modal -->
+<div id="appealModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h3>Appeal Details</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body" id="appealDetails">
+            <!-- Appeal details will be loaded here -->
+        </div>
+        <div class="modal-footer">
+            <button id="modalClose" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Appeal management functions
+function viewAppeal(appealId) {
+    const appeal = <%- JSON.stringify(appeals) %>.find(a => a._id === appealId);
+    if (!appeal) return;
+
+    const modalDetails = document.getElementById('appealDetails');
+    modalDetails.innerHTML = `
+        <div class="appeal-details">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Minecraft Username:</label>
+                    <span>${appeal.minecraftUsername}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Discord Username:</label>
+                    <span>${appeal.discordUsername}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Ban Type:</label>
+                    <span class="ban-type-badge ${appeal.banType}">${appeal.banType === 'permanent' ? 'Permanent' : 'Temporary'}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Ban Date:</label>
+                    <span>${new Date(appeal.banDate).toLocaleDateString()}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Status:</label>
+                    <span class="status-badge status-${appeal.status}">${appeal.status}</span>
+                </div>
+                <div class="detail-item full-width">
+                    <label>Original Ban Reason:</label>
+                    <p>${appeal.banReason}</p>
+                </div>
+                <div class="detail-item full-width">
+                    <label>Appeal Reason:</label>
+                    <p>${appeal.appealReason}</p>
+                </div>
+                <div class="detail-item full-width">
+                    <label>What Happened:</label>
+                    <p>${appeal.whatHappened}</p>
+                </div>
+                <div class="detail-item full-width">
+                    <label>Why Should You Be Unbanned:</label>
+                    <p>${appeal.whyUnban}</p>
+                </div>
+                ${appeal.additionalInfo ? `
+                    <div class="detail-item full-width">
+                        <label>Additional Information:</label>
+                        <p>${appeal.additionalInfo}</p>
+                    </div>
+                ` : ''}
+                <div class="detail-item">
+                    <label>Submitted:</label>
+                    <span>${new Date(appeal.submittedAt).toLocaleString()}</span>
+                </div>
+                ${appeal.reviewedAt ? `
+                    <div class="detail-item">
+                        <label>Reviewed:</label>
+                        <span>${new Date(appeal.reviewedAt).toLocaleString()}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Reviewed By:</label>
+                        <span>${appeal.reviewedBy}</span>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+
+    document.getElementById('appealModal').style.display = 'block';
+}
+
+async function reviewAppeal(appealId, status) {
+    if (!confirm(`Are you sure you want to ${status} this appeal?`)) return;
+
+    try {
+        const response = await fetch(`/admin/review/${appealId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            location.reload();
+        } else {
+            alert('Error updating appeal: ' + result.error);
+        }
+    } catch (error) {
+        alert('Error updating appeal: ' + error.message);
+    }
+}
+
+// Filter functionality
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter rows
+        document.querySelectorAll('.appeal-row').forEach(row => {
+            if (filter === 'all' || row.dataset.status === filter) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+
+<%- include('partials/footer') %>
